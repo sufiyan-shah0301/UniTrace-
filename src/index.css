@@ -1,5 +1,22 @@
-body {
+/* src/index.css */
+
+/* Ye rule browser ki default 8px ki margin/padding ko zero kar dega.
+   Isi se tumhari chaaron side ki white line chali jayegi. */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+}
+
+/* Ye rule app ko screen par fit karega aur scrollbar ko force-hide kar dega. */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* GUARANTEED SCROLLBAR FIX */
+}
+
+/* Ye tumhara pehle ka code hai, isko rehne do. */
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

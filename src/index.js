@@ -4,6 +4,7 @@ import React from 'react';
 // FIX: Import createRoot from 'react-dom/client' for React 18
 import { createRoot } from 'react-dom/client'; 
 import App from './App';
+import './index.css';
 
 // Find the container element
 const container = document.getElementById('root');

@@ -1,0 +1,205 @@
+/* src/styles/Auth.css */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden; 
+}
+
+.auth-card {
+  max-width: 420px;
+  width: 100%;
+  padding: 40px 30px;
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  color: white;
+  animation: fadeIn 0.5s ease-in-out;
+  z-index: 1; 
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #555;
+  width: 20px;
+  height: 20px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 15px 15px 15px 50px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.auth-input::placeholder {
+  color: #888;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  color: white;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.auth-button:hover {
+  opacity: 0.9;
+}
+
+.auth-button:active {
+  transform: scale(0.98);
+}
+
+.btn-primary { background-color: #007bff; }
+.btn-primary:hover { background-color: #0056b3; }
+.btn-danger { background-color: #db4437; }
+.btn-danger:hover { background-color: #c33023; }
+.btn-success { background-color: #28a745; }
+.btn-success:hover { background-color: #1e7a33; }
+.google-icon { width: 20px; height: 20px; }
+
+.divider {
+  text-align: center;
+  margin: 25px 0;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex-grow: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.auth-link {
+  margin-top: 25px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.auth-link a {
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 1px solid #fff;
+}
+
+.error-message {
+  color: #ffd2d2;
+  background-color: rgba(255, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+
+/* ---- RISING ICONS (WHITE COLOR) ---- */
+
+.animated-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; 
+}
+
+.animated-bg > svg {
+    position: absolute;
+    bottom: -150px; 
+    /* YAHAN COLOR CHANGE KIYA HAI */
+    color: white; 
+    opacity: 0.25; /* AUR OPACITY SET KI HAI */
+    animation: rise 25s infinite linear;
+}
+
+@keyframes rise {
+    0% {
+        transform: translateY(0);
+        opacity: 0.25; /* Start opacity */
+    }
+    100% {
+        transform: translateY(-120vh); 
+        opacity: 0; /* Upar jaakar fade out */
+    }
+}
+
+/* Har icon ko alag-alag style denge */
+.animated-bg svg:nth-of-type(1) { left: 10%; font-size: 80px; animation-duration: 22s; animation-delay: 0s; }
+.animated-bg svg:nth-of-type(2) { left: 20%; font-size: 30px; animation-duration: 18s; animation-delay: 2s; }
+.animated-bg svg:nth-of-type(3) { left: 25%; font-size: 50px; animation-duration: 28s; animation-delay: 5s; }
+.animated-bg svg:nth-of-type(4) { left: 40%; font-size: 90px; animation-duration: 20s; animation-delay: 0s; }
+.animated-bg svg:nth-of-type(5) { left: 50%; font-size: 40px; animation-duration: 15s; animation-delay: 8s; }
+.animated-bg svg:nth-of-type(6) { left: 65%; font-size: 70px; animation-duration: 25s; animation-delay: 3s; }
+.animated-bg svg:nth-of-type(7) { left: 75%; font-size: 45px; animation-duration: 17s; animation-delay: 6s; }
+.animated-bg svg:nth-of-type(8) { left: 85%; font-size: 65px; animation-duration: 30s; animation-delay: 1s; }
+.animated-bg svg:nth-of-type(9) { left: 90%; font-size: 25px; animation-duration: 19s; animation-delay: 4s; }
+.animated-bg svg:nth-of-type(10) { left: 55%; font-size: 35px; animation-duration: 23s; animation-delay: 10s; }
