@@ -1,49 +1,49 @@
-// src/pages/SignupPage.jsx
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-// FIX 1: Import all necessary modules for the save operation
 import { signUpUser } from '../services/firebaseService'; 
-import { db } from '../firebase'; // Import the Firestore instance
-import firebase from 'firebase/app'; // Import base firebase for FieldValue
+import { db } from '../firebase'; 
+import firebase from 'firebase/app'; 
+
+// CSS file import karo
+import '../styles/Auth.css';
+
+// Naye icons import karo (Same as LoginPage)
+import { BsBook, BsKey, BsBackpack, BsPencilSquare } from 'react-icons/bs';
+import { FaGraduationCap } from "react-icons/fa";
 
 function SignupPage() {
-    const [name, setName] = useState(''); // NEW STATE for Name
+    const [name, setName] = useState(''); 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setLoading(true);
-
+        
         if (password.length < 6) {
             setError('Password must be at least 6 characters long.');
-            setLoading(false);
             return;
         }
+        setLoading(true);
 
         try {
-            // 1. Create user in Firebase Auth
             const userCredential = await signUpUser(email, password); 
             const user = userCredential.user;
             
-            // 2. Update the user's Firebase Auth profile (for immediate 'Hello, Name' display)
             await user.updateProfile({ 
                 displayName: name 
             });
 
-            // 3. CRITICAL FIX: Save the user's data to the 'users' collection in Firestore
             await db.collection('users').doc(user.uid).set({
                 uid: user.uid,
                 displayName: name,
                 email: email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Timestamp for sorting
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-            // -----------------------------------------------------------
 
             navigate('/'); 
         } catch (err) {
@@ -54,24 +54,71 @@ function SignupPage() {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '5px' }}>
-            <h2>Sign Up</h2>
-            {error && <p style={{ color: 'red', marginBottom: '15px' }}>{error}</p>}
-            
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {/* INPUT: Full Name / Display Name */}
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full Name / Display Name" required style={{ padding: '10px' }}/> 
+        <div className="auth-container">
 
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required style={{ padding: '10px' }}/>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password (min 6 characters)" required style={{ padding: '10px' }}/>
-                <button type="submit" disabled={loading} style={{ padding: '10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                    {loading ? 'Signing Up...' : 'Sign Up'}
-                </button>
-            </form>
+            {/* ANIMATED ICONS KA AREA (YAHAN BHI ADD KAR DIYA) */}
+            <div className="animated-bg">
+                <BsBook />
+                <FaGraduationCap />
+                <BsKey />
+                <BsBackpack />
+                <BsPencilSquare />
+                <BsBook />
+                <FaGraduationCap />
+                <BsKey />
+                <BsBackpack />
+                <BsPencilSquare />
+            </div>
 
-            <p style={{ marginTop: '20px', textAlign: 'center' }}>
-                Already have an account? <Link to="/login">Log In</Link>
-            </p>
+            {/* Signup Card */}
+            <div className="auth-card">
+                <h2>Create Account</h2>
+                {error && <p className="error-message">{error}</p>}
+                
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="input-group">
+                       <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.498.07 7.502 7.502 0 0 0-14.992 0 .75.75 0 1 1-1.5-.07 9.005 9.005 0 0 1 5.9-8.181A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z" /></svg>
+                        <input 
+                            type="text" 
+                            value={name} 
+                            onChange={(e) => setName(e.target.value)} 
+                            placeholder="Full Name" 
+                            required 
+                            className="auth-input"
+                        />
+                    </div>
+                     <div className="input-group">
+                        <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 4.5a3 3 0 0 1 3-3h15a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3v-15Zm12.039 4.763a1.5 1.5 0 0 0-2.078 0l-4.5 3.75a1.5 1.5 0 0 0 .961 2.737h9a1.5 1.5 0 0 0 .96-2.737l-4.5-3.75Z" /></svg>
+                        <input 
+                            type="email" 
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            placeholder="Email" 
+                            required 
+                            className="auth-input"
+                        />
+                    </div>
+                    <div className="input-group">
+                        <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 11V7a4 4 0 1 1 8 0v4h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2 0v0h4V7a2 2 0 1 0-4 0v4Z" /></svg>
+                        <input 
+                            type="password" 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            placeholder="Password (min 6 characters)" 
+                            required 
+                            className="auth-input"
+                        />
+                    </div>
+                    
+                    <button type="submit" disabled={loading} className="auth-button btn-success">
+                        {loading ? 'Signing Up...' : 'Sign Up'}
+                    </button>
+                </form>
+
+                <p className="auth-link">
+                    Already have an account? <Link to="/login">Log In</Link>
+                </p>
+            </div>
         </div>
     );
 }
