@@ -1,10 +1,11 @@
-// src/pages/DashboardPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { fetchMyPostedItems, fetchMyClaimedItems } from '../services/firebaseService';
 import { useAuth } from '../context/AuthContext';
 import ItemCard from '../components/ItemCard'; 
-import ChatBox from '../components/ChatBox'; // FIX: Import ChatBox
+import ChatBox from '../components/ChatBox'; 
+
+import '../styles/DashboardPage.css'; 
+import '../styles/ListingPage.css'; 
 
 function DashboardPage() {
     const { currentUser } = useAuth();
@@ -12,7 +13,6 @@ function DashboardPage() {
     const [claimedItems, setClaimedItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('posted');
-    // FIX: State to manage the open chat window
     const [activeChatId, setActiveChatId] = useState(null); 
 
     useEffect(() => {
@@ -32,60 +32,72 @@ function DashboardPage() {
                 setLoading(false);
             }
         };
-        loadDashboardData();
-    }, []);
+        if (currentUser) {
+            loadDashboardData();
+        } else {
+            setLoading(false); 
+        }
+    }, [currentUser]); 
 
-    // FIX: Show ChatBox if activeChatId is set
-    if (activeChatId) {
+    // --- YEH IF BLOCK HATA DIYA HAI ---
+    // if (activeChatId) { ... } 
+    
+    if (loading) {
         return (
-            <ChatBox 
-                itemId={activeChatId} 
-                onClose={() => setActiveChatId(null)} // Function to close the chat
-            />
+            <div className="loading-container">
+                <div className="spinner"></div>
+            </div>
         );
     }
-    
-    if (loading) return <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading Dashboard...</div>;
 
     const itemsToDisplay = activeTab === 'posted' ? postedItems : claimedItems;
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h2>Your Activity Dashboard</h2>
+        // Ek wrapper fragment add kiya
+        <>
+            <div className="dashboard-page-container">
+                <h2 className="dashboard-title">Your Activity Dashboard</h2>
 
-            {/* Tab Navigation */}
-            <div style={{ marginBottom: '30px' }}>
-                <button 
-                    onClick={() => setActiveTab('posted')}
-                    style={{ padding: '10px', marginRight: '10px', backgroundColor: activeTab === 'posted' ? '#007bff' : '#f0f0f0', color: activeTab === 'posted' ? 'white' : 'black' }}
-                >
-                    My Posted Items ({postedItems.length})
-                </button>
-                <button 
-                    onClick={() => setActiveTab('claimed')}
-                    style={{ padding: '10px', backgroundColor: activeTab === 'claimed' ? '#007bff' : '#f0f0f0', color: activeTab === 'claimed' ? 'white' : 'black' }}
-                >
-                    My Claimed Items ({claimedItems.length})
-                </button>
+                <div className="dashboard-tabs">
+                    <button 
+                        onClick={() => setActiveTab('posted')}
+                        className={`dashboard-tab ${activeTab === 'posted' ? 'active' : ''}`}
+                    >
+                        My Posted Items ({postedItems.length})
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('claimed')}
+                        className={`dashboard-tab ${activeTab === 'claimed' ? 'active' : ''}`}
+                    >
+                        My Claimed Items ({claimedItems.length})
+                    </button>
+                </div>
+
+                <div className="item-list-grid">
+                    {itemsToDisplay.length > 0 ? (
+                        itemsToDisplay.map(item => (
+                            <ItemCard 
+                                key={item.id} 
+                                item={item} 
+                                isDashboard={true} 
+                                setActiveChatId={setActiveChatId} 
+                            />
+                        ))
+                    ) : (
+                        <p className="no-items-message">You have no {activeTab} items.</p>
+                    )}
+                </div>
             </div>
 
-            {/* Item List */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', justifyContent: 'center' }}>
-                {itemsToDisplay.length > 0 ? (
-                    itemsToDisplay.map(item => (
-                        // FIX: Pass setActiveChatId function to ItemCard
-                        <ItemCard 
-                            key={item.id} 
-                            item={item} 
-                            isDashboard={true} 
-                            setActiveChatId={setActiveChatId} 
-                        />
-                    ))
-                ) : (
-                    <p>You have no {activeTab} items.</p>
-                )}
-            </div>
-        </div>
+            {/* --- CHATBOX KO YAHAN RENDER KIYA HAI --- */}
+            {/* Jab activeChatId set hoga, yeh modal ki tarah upar aa jayega */}
+            {activeChatId && (
+                <ChatBox 
+                    itemId={activeChatId} 
+                    onClose={() => setActiveChatId(null)} 
+                />
+            )}
+        </>
     );
 }
 

@@ -1,18 +1,18 @@
-// src/components/Header.jsx (FINAL LAYOUT)
-
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
+// Yahan NavLink ko import kiya hai
+import { NavLink, Link, useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext';
+import '../styles/Header.css';
+import logoImage from '../assets/logo.png';
 
 function Header() {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
-
-    const userName = currentUser?.displayName || currentUser?.email.split('@')[0]; 
+    const userName = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
 
     const handleLogout = async () => {
         try {
-            await logout(); 
+            await logout();
             navigate('/login');
         } catch (error) {
             console.error('Logout Failed:', error);
@@ -20,97 +20,70 @@ function Header() {
         }
     };
 
-    // Styling for three-column layout (Logo Left, Nav Center, User Right)
-    const navStyle = { 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        padding: '15px 30px', 
-        backgroundColor: '#f8f8f8',
-        borderBottom: '1px solid #e0e0e0' 
-    };
-    const linkStyle = { 
-        marginLeft: '20px', 
-        textDecoration: 'none', 
-        color: '#007bff', 
-        fontWeight: '500' 
-    };
-    // Style for the User/Logout vertical stack section
-    const userGroupRightStyle = { 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'flex-end' 
-    };
-
     return (
-        <nav style={navStyle}>
-            {/* 1. LEFT SECTION (Logo) */}
-            <Link to="/" style={{ textDecoration: 'none', color: '#333' }}>
-                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Lost & Found 🎓</h1>
-            </Link>
+        <header className="header-container">
+            <div className="header-content">
+                <Link to="/" className="header-brand">
+                    <img src={logoImage} alt="UniTrace Logo" className="header-logo" />
+                    <h1 className="header-title">
+                        <span className="header-uni">Uni</span>
+                        <span className="header-trace">Trace</span>
+                    </h1>
+                </Link>
 
-            {/* 2. CENTER SECTION (Navigation Links) */}
-            <div style={{ display: 'flex', justifyContent: 'center', flexGrow: 1 }}>
-                {currentUser && (
-                    <>
-                        <Link to="/" style={linkStyle}>Board</Link> 
-                        <Link to="/post" style={linkStyle}>Post Item</Link>
-                        <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
-                    </>
-                )}
-            </div>
-            
-            {/* 3. RIGHT SECTION (Profile Icon + User Info + Logout) */}
-            <div style={userGroupRightStyle}>
-                {currentUser ? (
-                    <>
-                        {/* FIX 1: Profile Icon Link */}
-                        <Link to="/profile" style={{ textDecoration: 'none', color: '#333', marginRight: '15px' }}>
-                            <span style={{ 
-                                backgroundColor: '#007bff', 
-                                color: 'white', 
-                                borderRadius: '50%', 
-                                padding: '5px 10px', 
-                                fontWeight: 'bold',
-                                fontSize: '1.2rem'
-                            }}>
-                                {userName.substring(0, 1).toUpperCase()}
-                            </span>
-                        </Link>
-                        
-                        {/* FIX 2: Vertical Stack for User Name and Logout */}
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.2 }}>
-                            {/* User Name */}
-                            <Link to="/profile" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold', fontSize: '0.95rem' }}>
-                                Hello, {userName}
-                            </Link>
-                            
-                            {/* Logout Button */}
-                            <span 
-                                style={{
-                                    cursor: 'pointer', 
-                                    color: '#dc3545', 
-                                    fontSize: '0.8rem', 
-                                    fontWeight: '500',
-                                    textDecoration: 'underline'
-                                }} 
-                                onClick={handleLogout}
+                <nav className="header-nav">
+                    {currentUser && (
+                        <>
+                            {/* Link ko NavLink se replace kiya */}
+                            <NavLink 
+                                to="/listings" 
+                                className={({ isActive }) => isActive ? "header-nav-link active" : "header-nav-link"}
                             >
-                                Logout
-                            </span>
-                        </div>
-                    </>
-                ) : (
-                    // User is Logged Out (Login/Signup links)
-                    <>
-                        <Link to="/login" style={linkStyle}>Login</Link>
-                        <Link to="/signup" style={linkStyle}>Sign Up</Link>
-                    </>
-                )}
+                                Board
+                            </NavLink>
+                            <NavLink 
+                                to="/post" 
+                                className={({ isActive }) => isActive ? "header-nav-link active" : "header-nav-link"}
+                            >
+                                Post Item
+                            </NavLink>
+                            <NavLink 
+                                to="/dashboard" 
+                                className={({ isActive }) => isActive ? "header-nav-link active" : "header-nav-link"}
+                            >
+                                Dashboard
+                            </NavLink>
+                        </>
+                    )}
+                </nav>
+
+                <div className="header-user-menu">
+                    {currentUser ? (
+                        <>
+                            <Link to="/profile" className="profile-icon-link">
+                                <span className="profile-initial">
+                                    {userName.substring(0, 1).toUpperCase()}
+                                </span>
+                            </Link>
+                            <div className="user-details">
+                                <Link to="/profile" className="user-name-link">
+                                    Hello, {userName}
+                                </Link>
+                                <span className="logout-link" onClick={handleLogout}>
+                                    Logout
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <nav className="header-auth-nav">
+                            <Link to="/login" className="header-nav-link">Login</Link>
+                            <Link to="/signup" className="header-nav-link">Sign Up</Link>
+                        </nav>
+                    )}
+                </div>
             </div>
-        </nav>
+        </header>
     );
 }
 
 export default Header;
-//

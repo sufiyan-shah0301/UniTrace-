@@ -1,12 +1,11 @@
-// src/App.js (FINAL CODE - Centering Auth Pages)
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; 
 import { AuthProvider } from './context/AuthContext';
 
 // Import Pages
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ListingPage from './pages/ListingPage';
 import PostItem from './pages/PostItem';
 import DashboardPage from './pages/DashboardPage';
@@ -15,58 +14,124 @@ import ViewProfilePage from './pages/ViewProfilePage';
 
 // Import Components
 import PrivateRoute from './components/PrivateRoute';
-import Header from './components/Header'; 
+import Header from './components/Header';
 
-// Helper component to handle background and conditional rendering
+// Helper component
 function AppContent() {
     const location = useLocation(); 
-    const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+    const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
 
-    const backgroundStyle = {
-        backgroundImage: isAuthPage ? 'url(/background.jpg)' : 'none',
-        backgroundColor: isAuthPage ? '#f4f4f4' : 'white', 
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        minHeight: '100vh',
-        width: '100vw',
+    // CRITICAL: Force body scroll based on page type
+    useEffect(() => {
+        if (isAuthPage) {
+            // Auth pages: No scroll - FORCED!
+            document.body.style.setProperty('overflow', 'hidden', 'important');
+            document.body.style.setProperty('height', '100vh', 'important');
+            document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+            document.documentElement.style.setProperty('height', '100vh', 'important');
+        } else {
+            // Other pages: Scroll enabled
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('height');
+            document.body.style.overflow = 'visible';
+            document.body.style.height = 'auto';
+            document.documentElement.style.removeProperty('overflow');
+            document.documentElement.style.removeProperty('height');
+            document.documentElement.style.overflow = 'visible';
+            document.documentElement.style.height = 'auto';
+        }
         
-        // FIX 1: Add Flex properties to center content only on auth pages
-        display: isAuthPage ? 'flex' : 'block',
-        alignItems: isAuthPage ? 'center' : 'none', // Vertically center
-        justifyContent: isAuthPage ? 'center' : 'none', // Horizontally center
-    };
+        return () => {
+            // Cleanup
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('height');
+            document.documentElement.style.removeProperty('overflow');
+            document.documentElement.style.removeProperty('height');
+        };
+    }, [location, isAuthPage]);
 
     return (
-        <div style={backgroundStyle}>
-            
-            {/* Conditionally Render Header (Hidden on Login/Signup) */}
-            {!isAuthPage && <Header />} 
+        <>
+            {/* Fixed Background for non-auth pages */}
+            {!isAuthPage && (
+                <>
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundImage: 'url(/main-background.jpg)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        zIndex: -2
+                    }}></div>
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                        zIndex: -1
+                    }}></div>
+                </>
+            )}
 
-            <div className="container" style={{
-                width: '100%', 
-                // Remove padding top for auth pages
-                paddingTop: isAuthPage ? '0' : '65px',
+            {/* Auth page background */}
+            {isAuthPage && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'url(/background.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundColor: '#f4f4f4',
+                    zIndex: -1
+                }}></div>
+            )}
+
+            {/* Scrollable content wrapper */}
+            <div style={{
+                minHeight: '100vh',
+                width: '100%',
+                position: 'relative',
+                display: isAuthPage ? 'flex' : 'block',
+                alignItems: isAuthPage ? 'center' : 'flex-start',
+                justifyContent: isAuthPage ? 'center' : 'flex-start'
             }}>
-                <Routes>
-                    <Route exact path="/" element={<ListingPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignupPage />} />
+                {!isAuthPage && <Header />}
 
-                    {/* Private Routes */}
-                    <Route path="/post" element={<PrivateRoute element={<PostItem />} />} />
-                    <Route path="/dashboard" element={<PrivateRoute element={<DashboardPage />} />} />
-                    <Route path="/profile" element={<PrivateRoute element={<ProfilePage />} />} />
-                    <Route path="/profile/:userId" element={<PrivateRoute element={<ViewProfilePage />} />} />
-
-                    {/* 404 Route */}
-                    <Route path="*" element={<div>404: Page Not Found</div>} />
-                </Routes>
+                {/* Routes container */}
+                <div style={{
+                    width: '100%',
+                    paddingTop: isAuthPage ? '0' : '85px',
+                    paddingBottom: '60px',
+                    position: 'relative',
+                    zIndex: 1
+                }}>
+                    <Routes>
+                        <Route path="/" element={<ListingPage />} /> 
+                        <Route path="/listings" element={<ListingPage />} /> 
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                        <Route path="/post" element={<PrivateRoute element={<PostItem />} />} />
+                        <Route path="/dashboard" element={<PrivateRoute element={<DashboardPage />} />} />
+                        <Route path="/profile" element={<PrivateRoute element={<ProfilePage />} />} />
+                        <Route path="/profile/:userId" element={<PrivateRoute element={<ViewProfilePage />} />} />
+                        <Route path="*" element={<div>404: Page Not Found</div>} />
+                    </Routes>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
-// Main App component (wraps with Router)
+// Main App component
 function App() {
     return (
         <Router>
@@ -78,4 +143,3 @@ function App() {
 }
 
 export default App;
-//
