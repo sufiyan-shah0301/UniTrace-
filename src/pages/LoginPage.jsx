@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signInUser, signInWithGoogle } from '../services/firebaseService';
-
-// CSS file import karo
 import '../styles/Auth.css';
-
-// Naye icons import karo
-import { BsBook, BsKey, BsBackpack, BsPencilSquare } from 'react-icons/bs';
+import { BsBook, BsKey, BsBackpack, BsPencilSquare, BsEye, BsEyeSlash } from 'react-icons/bs';
 import { FaGraduationCap } from "react-icons/fa";
+import logoImage from '../assets/logo.png'; 
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleEmailLogin = async (e) => {
@@ -46,24 +43,20 @@ function LoginPage() {
 
     return (
         <div className="auth-container">
-
-            {/* ANIMATED ICONS KA AREA */}
             <div className="animated-bg">
-                <BsBook />
-                <FaGraduationCap />
-                <BsKey />
-                <BsBackpack />
-                <BsPencilSquare />
-                <BsBook />
-                <FaGraduationCap />
-                <BsKey />
-                <BsBackpack />
-                <BsPencilSquare />
+                <BsBook /> <FaGraduationCap /> <BsKey /> <BsBackpack /> <BsPencilSquare />
+                <BsBook /> <FaGraduationCap /> <BsKey /> <BsBackpack /> <BsPencilSquare />
             </div>
 
-            {/* Login Card */}
             <div className="auth-card">
-                <h2>Welcome Back!</h2>
+                
+                <div className="auth-header">
+                    <div className="auth-logo" style={{ backgroundImage: `url(${logoImage})` }}></div>
+                    <h2 className="brand-title">
+                        <span className="brand-uni">Uni</span><span className="brand-trace">Trace</span>
+                    </h2>
+                </div>
+                
                 {error && <p className="error-message">{error}</p>}
                 
                 <form onSubmit={handleEmailLogin} className="auth-form">
@@ -78,16 +71,25 @@ function LoginPage() {
                             className="auth-input"
                         />
                     </div>
+                    
                     <div className="input-group">
                         <svg className="input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 11V7a4 4 0 1 1 8 0v4h1a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1Zm2 0v0h4V7a2 2 0 1 0-4 0v4Z" /></svg>
                         <input 
-                            type="password" 
+                            type={showPassword ? 'text' : 'password'} 
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)} 
                             placeholder="Password" 
                             required 
                             className="auth-input"
+                            style={{ paddingRight: '50px' }}
                         />
+                        <span onClick={() => setShowPassword(!showPassword)} className="password-toggle-icon">
+                            {showPassword ? <BsEyeSlash /> : <BsEye />}
+                        </span>
+                    </div>
+                    
+                    <div className="options-container">
+                        <Link to="/forgot-password" className="forgot-password-link">Forgot Password?</Link>
                     </div>
                     
                     <button type="submit" disabled={loading} className="auth-button btn-primary">

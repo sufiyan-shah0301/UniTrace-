@@ -1,0 +1,96 @@
+/* src/styles/ViewProfilePage.css */
+
+.view-profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Taaki header ke neeche se start ho */
+  padding: 105px 20px 40px 20px; /* Header (65px) + extra space (40px) */
+  box-sizing: border-box;
+  min-height: calc(100vh - 105px - 40px); /* Full height minus padding */
+}
+
+.view-profile-card {
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 30px 40px;
+  width: 100%; 
+  max-width: 500px; /* Thoda chhota card */
+  box-sizing: border-box;
+  color: #f5f5f5;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  text-align: center; /* Center align text */
+}
+
+.view-profile-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.view-profile-subtitle {
+    font-size: 0.95rem;
+    color: #c0c0c0;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 20px;
+}
+
+.profile-details {
+    margin-top: 20px;
+}
+
+/* User ka naam */
+.profile-details h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.profile-details p {
+    font-size: 1rem;
+    color: #e0e0e0;
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.profile-details p strong {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Phone number styling */
+.profile-phone {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 15px !important; /* Thodi zyada space */
+}
+
+.profile-phone.available {
+    color: #28a745; /* Green */
+}
+
+.profile-phone.unavailable {
+    color: #dc3545; /* Red */
+    font-weight: 500;
+    font-style: italic;
+    font-size: 1rem;
+}
+
+/* Loading/Error message styling */
+.profile-message {
+    text-align: center;
+    margin-top: 50px;
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-message.error {
+    color: #ffc0cb; /* Light red */
+}

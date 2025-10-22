@@ -3,13 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signUpUser } from '../services/firebaseService'; 
 import { db } from '../firebase'; 
 import firebase from 'firebase/app'; 
-
-// CSS file import karo
 import '../styles/Auth.css';
-
-// Naye icons import karo (Same as LoginPage)
 import { BsBook, BsKey, BsBackpack, BsPencilSquare } from 'react-icons/bs';
 import { FaGraduationCap } from "react-icons/fa";
+import logoImage from '../assets/logo.png';
 
 function SignupPage() {
     const [name, setName] = useState(''); 
@@ -17,34 +14,28 @@ function SignupPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        
         if (password.length < 6) {
             setError('Password must be at least 6 characters long.');
             return;
         }
         setLoading(true);
-
         try {
             const userCredential = await signUpUser(email, password); 
             const user = userCredential.user;
-            
             await user.updateProfile({ 
                 displayName: name 
             });
-
             await db.collection('users').doc(user.uid).set({
                 uid: user.uid,
                 displayName: name,
                 email: email,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-
             navigate('/'); 
         } catch (err) {
             setError('Failed to sign up: ' + err.message); 
@@ -55,24 +46,18 @@ function SignupPage() {
 
     return (
         <div className="auth-container">
-
-            {/* ANIMATED ICONS KA AREA (YAHAN BHI ADD KAR DIYA) */}
             <div className="animated-bg">
-                <BsBook />
-                <FaGraduationCap />
-                <BsKey />
-                <BsBackpack />
-                <BsPencilSquare />
-                <BsBook />
-                <FaGraduationCap />
-                <BsKey />
-                <BsBackpack />
-                <BsPencilSquare />
+                <BsBook /> <FaGraduationCap /> <BsKey /> <BsBackpack /> <BsPencilSquare />
+                <BsBook /> <FaGraduationCap /> <BsKey /> <BsBackpack /> <BsPencilSquare />
             </div>
-
-            {/* Signup Card */}
             <div className="auth-card">
-                <h2>Create Account</h2>
+                <div className="auth-header">
+                    <div className="auth-logo" style={{ backgroundImage: `url(${logoImage})` }}></div>
+                    <h2 className="brand-title">
+                        <span className="brand-uni">Uni</span><span className="brand-trace">Trace</span>
+                    </h2>
+                </div>
+                
                 {error && <p className="error-message">{error}</p>}
                 
                 <form onSubmit={handleSubmit} className="auth-form">
